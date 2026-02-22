@@ -28,7 +28,7 @@ sns.barplot(
     y='Demographics Response',
     hue='Demographics Question'
 )
-plt.title("Top 20 Demographic Groups Reporting Violence")
+plt.title("Top 20 Demographic Groups Justifying Domestic Violence")
 plt.xlabel("Number of Reports")
 plt.ylabel("Demographic Group")
 plt.show()

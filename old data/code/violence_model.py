@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 # 1. Load dataset
-df = pd.read_csv("violence_data.csv")
+df = pd.read_csv("data/processed/violence_data_cleaned.csv")
 
 # 2. Choose the violence question we want to model
 target_question = df['Question'].unique()[0]  # pick the first question
@@ -17,6 +17,18 @@ print("Filtered dataset shape:", df_target.shape)
 # 3. Create binary target
 df_target['Violence_Occurred'] = df_target['Value'].apply(lambda x: 1 if x > 0 else 0)
 
+
+# Create country-level target BEFORE pivot
+country_target = (
+    df_target
+    .groupby(['Country', 'Survey Year'])['Violence_Occurred']
+    .max()
+    .reset_index()
+)
+
+country_target.rename(columns={'Violence_Occurred': 'Country_Violence'}, inplace=True)
+
+
 # 4. Pivot demographics to wide format
 df_wide = df_target.pivot_table(
     index=['Country', 'Survey Year'],  # identifiers
@@ -25,7 +37,17 @@ df_wide = df_target.pivot_table(
     fill_value=0
 ).reset_index()
 
+
 print("Pivoted dataset shape:", df_wide.shape)
+
+
+# Merge with wide dataframe
+df_wide = df_wide.merge(country_target, on=['Country', 'Survey Year'])
+
+X = df_wide.drop(columns=['Country', 'Survey Year', 'Country_Violence'])
+y = df_wide['Country_Violence']
+
+
 
 # 5. Define features and target
 X = df_wide.drop(columns=['Country', 'Survey Year'])

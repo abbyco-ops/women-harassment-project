@@ -1,13 +1,3 @@
-import pandas as pd 
-import matplotlib.pyplot as plt
-
-df = pd.read_csv("data/processed/violence_data_cleaned.csv")
-#df['Value'].hist(bins=20)
-#plt.show()
-
-
-
-
 import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
@@ -101,4 +91,3 @@ print(coefficients.head(10))
 
 print("\nTop 10 Negative Associations:")
 print(coefficients.tail(10))
-
